@@ -70,7 +70,7 @@ VALUES('Budapeste', 176,2,4,1),
 ('Animais Fantásticos e Onde Habitam', 267,2,4,3)
 
 --a) O total de livros que começam com a letra P
-SELECT count(codLivro) FROM tbLivro 
+SELECT count(numPaginas) FROM tbLivro 
 WHERE nomeLivro LIKE 'P%'
 
 --b) O maior número de páginas entre todos os livros
@@ -108,7 +108,7 @@ WHERE nomeLivro LIKE '%poema%'
 
 
 --k) A quantidade de livros agrupado pelo nome do gênero
-SELECT nomeGenero, count(codLivro) Qtd_Materia FROM tbLivro 
+SELECT nomeGenero, count(numPaginas) Qtd_Materia FROM tbLivro 
 INNER JOIN tbGenero ON tbLivro.codGenero = tbGenero.codGenero
 GROUP BY nomeGenero
 
@@ -127,7 +127,7 @@ ORDER BY nomeAutor
 
 
 --n) A quantidade de livros agrupada pelo nome da editora em ordem alfabética inversa (de Z a A)
-SELECT nomeEditora, COUNT(codLivro) QTD_LIVROS FROM tbLivro 
+SELECT nomeEditora, COUNT(numPaginas) QTD_LIVROS FROM tbLivro 
 INNER JOIN tbEditora
 ON tbEditora.codEditora = tbLivro.codEditora
 GROUP BY nomeEditora
@@ -144,11 +144,13 @@ GROUP BY nomeAutor
 SELECT nomeAutor, SUM(numPaginas) SOMA_PG FROM tbLivro 
 INNER JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
-WHERE nomeAutor LIKE 'C%'
+WHERE nomeAutor LIKE ='%Machado de Assis%'OR'%Cora Coralina%' OR '%Graciliano Ramos%'  OR '%Clarice Lispector%'
 GROUP BY nomeAutor
 
 
---q) A soma das páginas dos livros agrupadas pelo nome da editora cujo número de páginas esteja entre 200 e 500 (inclusive)SELECT nomeEditora, SUM(numPaginas) QTD_LIVROS FROM tbLivro 
+--q) A soma das páginas dos livros agrupadas pelo nome da editora cujo número de páginas esteja entre 200 e 500 (inclusive)
+
+SELECT nomeEditora, SUM(numPaginas) QTD_LIVROS FROM tbLivro 
 INNER JOIN tbEditora
 ON tbEditora.codEditora = tbLivro.codEditora
 WHERE numPaginas BETWEEN 200 AND 500
@@ -161,7 +163,9 @@ ON tbLivro.codEditora = tbEditora.codEditora
 INNER JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
 
---s) O nome dos livros ao lado do nome do autor somente daqueles cujo nome da editora for “Cia das Letras”SELECT nomeLivro, nomeAutor, nomeEditora  FROM tbLivro
+--s) O nome dos livros ao lado do nome do autor somente daqueles cujo nome da editora for “Cia das Letras”
+
+SELECT nomeLivro, nomeAutor, nomeEditora  FROM tbLivro
 INNER JOIN tbEditora
 ON tbLivro.codEditora = tbEditora.codEditora
 INNER JOIN tbAutor
@@ -172,7 +176,7 @@ WHERE nomeEditora LIKE 'Cia das Letras'
 SELECT nomeLivro, nomeAutor  FROM tbLivro
 INNER JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
-WHERE nomeAutor LIKE 'Érico Veríssimo'
+WHERE nomeAutor NOT LIKE = 'Érico Veríssimo'
 
 
 --u) Os nomes dos autores ao lado dos nomes dos livros, inclusive daqueles que não tem livros cadastrados
@@ -180,7 +184,8 @@ SELECT nomeAutor, nomeLivro  FROM tbAutor
 LEFT JOIN tbLivro
 ON tbAutor.codAutor = tbLivro.codAutor
 
--- v) Os nomes dos autores ao lado dos nomes dos livros, inclusive daqueles que não tem autores cadastradosSELECT nomeLivro, nomeAutor   FROM tbLivro
+-- v) Os nomes dos autores ao lado dos nomes dos livros, inclusive daqueles que não tem autores cadastrados
+SELECT nomeLivro, nomeAutor   FROM tbLivro
 LEFT JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
 
