@@ -141,10 +141,14 @@ WHERE nomeAutor LIKE 'C%'
 GROUP BY nomeAutor
 
 --p) A quantidade de livros agrupados pelo nome do autor, cujo nome do autor seja “Machado de Assis” ou “Cora Coralina” ou “Graciliano Ramos” ou “Clarice Lispector”
-SELECT nomeAutor, SUM(numPaginas) SOMA_PG FROM tbLivro 
-INNER JOIN tbAutor
+
+SELECT nomeAutor, COUNT(numPaginas) SOMA_PG FROM tbAutor 
+Left JOIN tbLivro
 ON tbAutor.codAutor = tbLivro.codAutor
-WHERE nomeAutor LIKE ='%Machado de Assis%'OR'%Cora Coralina%' OR '%Graciliano Ramos%'  OR '%Clarice Lispector%'
+WHERE nomeAutor LIKE '%Machado de Assis%' OR 
+nomeAutor LIKE '%Cora Coralina%' OR 
+nomeAutor LIKE '%Graciliano Ramos%'  OR 
+nomeAutor LIKE '%Clarice Lispector%'
 GROUP BY nomeAutor
 
 
@@ -176,7 +180,7 @@ WHERE nomeEditora LIKE 'Cia das Letras'
 SELECT nomeLivro, nomeAutor  FROM tbLivro
 INNER JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
-WHERE nomeAutor NOT LIKE = 'Érico Veríssimo'
+WHERE nomeAutor NOT LIKE 'Érico Veríssimo'
 
 
 --u) Os nomes dos autores ao lado dos nomes dos livros, inclusive daqueles que não tem livros cadastrados
@@ -185,7 +189,7 @@ LEFT JOIN tbLivro
 ON tbAutor.codAutor = tbLivro.codAutor
 
 -- v) Os nomes dos autores ao lado dos nomes dos livros, inclusive daqueles que não tem autores cadastrados
-SELECT nomeLivro, nomeAutor   FROM tbLivro
+SELECT nomeAutor, nomeLivro   FROM tbLivro
 LEFT JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
 
@@ -195,7 +199,7 @@ FULL OUTER JOIN tbAutor
 ON tbAutor.codAutor = tbLivro.codAutor
 
 -- x) A editora Ática irá publicar todos os títulos dessa livraria. Criar um select que associe os nomes de todos os livros ao lado do nome da editora Ática
-SELECT nomeEditora, nomeLivro   FROM tbLivro
+SELECT nomeLivro, nomeEditora   FROM tbLivro
 JOIN tbEditora
 ON nomeEditora LIKE 'Ática'
 
