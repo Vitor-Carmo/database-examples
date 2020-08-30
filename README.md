@@ -1,4 +1,4 @@
-# Examples sql 
+# Examples SQL 
 
 
 these are examples of sql commands for me, if I forget
