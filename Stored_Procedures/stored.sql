@@ -3,8 +3,6 @@ use bdEscola
 
 -- 1 Criar uma stored procedure “Busca_Aluno” que receba o código do aluno e retorne seu nome e data de nascimento.
 
-
-
 CREATE PROCEDURE spBusca_Aluno
 	@cod_aluno INT
 	AS
@@ -103,6 +101,7 @@ AS
 
 EXEC spInserindo_Aluno 'Vitória Santos', '2006-05-03', '111.222.333-0', 'SP', '111.222.333-11'
 
+
 -- 7 Criar uma stored procedure que receba o nome do curso e o nome
 -- do aluno e matricule o mesmo no
 -- curso pretendido
@@ -111,20 +110,28 @@ CREATE PROCEDURE spMatriculaAluno
 	@nomeAluno VARCHAR(30),
 	@nomeCurso VARCHAR(30)
 
-AS 
-	declare @codAluno int = (SELECT codAluno FROM tbAluno WHERE nomeALuno Like @nomeAluno)
-	declare @codTurma int = (SELECT TOP 1 codTurma FROM tbCurso 
-								INNER JOIN tbTurma ON tbTurma.codCurso = tbCurso.codCurso
-								WHERE nomeCurso Like @nomeCurso )
+AS	
+	IF EXISTS(SELECT codAluno FROM tbAluno WHERE nomeALuno Like @nomeAluno) and
+		EXISTS(SELECT TOP 1 codTurma FROM tbCurso
+				INNER JOIN tbTurma ON tbTurma.codCurso = tbCurso.codCurso
+				WHERE nomeCurso Like @nomeCurso)
+		BEGIN
+			declare @codAluno int = (SELECT codAluno FROM tbAluno WHERE nomeALuno Like @nomeAluno)
+			declare @codTurma int = (SELECT TOP 1 codTurma FROM tbCurso 
+										INNER JOIN tbTurma ON tbTurma.codCurso = tbCurso.codCurso
+										WHERE nomeCurso Like @nomeCurso )
 
-	INSERT INTO tbMatricula(dataMatricula, codAluno, codTurma)
-	VALUES( GETDATE(), @codAluno, @codTurma)
+			INSERT INTO tbMatricula(dataMatricula, codAluno, codTurma)
+			VALUES( GETDATE(), @codAluno, @codTurma)
+			print(@nomeAluno+' Foi cadastrado com sucesso no curso de' +@nomeCurso+'.')		
+
+		END
+	ELSE
+		BEGIN
+			print('Nenhum Aluno ou Curso foi encontrado com esses parâmetros!')		
+		END
 
 EXEC spMatriculaAluno 'Vitor Carmo', 'Espanhol'
 EXEC spMatriculaAluno 'Vitor Carmo', 'Alemão'
-
-
-SELECT nomeALuno, nomeCurso from tbAluno
-INNER JOIN tbMatricula ON tbMatricula.codAluno = tbAluno.codAluno
-INNER JOIN tbTurma ON tbTurma.codTurma = tbMatricula.codTurma
-INNER JOIN tbCurso ON tbTurma.codCurso = tbCurso.codCurso
+EXEC spMatriculaAluno 'Vitor Carmo', 'Inglês'
+EXEC spMatriculaAluno 'Aline Mendonça', 'Alemão' -- retorna "nenhum Aluno ..."
